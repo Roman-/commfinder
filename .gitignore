@@ -1,0 +1,6 @@
+build
+*.log
+*.sw?
+tags
+*.txt.user
+*.pro.user
