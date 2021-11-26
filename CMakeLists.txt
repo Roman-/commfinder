@@ -14,6 +14,11 @@ FetchContent_Declare(easyloggingpp
 )
 FetchContent_MakeAvailable(easyloggingpp)
 include_directories(${easyloggingpp_SOURCE_DIR}/src)
+FetchContent_GetProperties(easyloggingpp)
+if(NOT easyloggingpp_POPULATED)
+    FetchContent_Populate(easyloggingpp)
+endif()
+
 
 FetchContent_Declare(googletest
     GIT_REPOSITORY https://github.com/google/googletest.git
@@ -29,6 +34,7 @@ set(Sources
     src/incrementalscramble.cpp
     src/cube_moves.cpp
     src/searchcriteria.cpp
+    ${easyloggingpp_SOURCE_DIR}/src/easylogging++.cc
 )
 
 set(Headers
@@ -43,7 +49,10 @@ set(Headers
 
 add_library("LIB${CMAKE_PROJECT_NAME}" STATIC ${Sources})
 add_subdirectory(test)
-target_include_directories("LIB${CMAKE_PROJECT_NAME}" PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src" ${easyloggingpp_SOURCE_DIR}/src)
+target_include_directories("LIB${CMAKE_PROJECT_NAME}" PUBLIC
+    "${CMAKE_CURRENT_SOURCE_DIR}/src"
+    "${easyloggingpp_SOURCE_DIR}/src"
+)
 add_executable(${CMAKE_PROJECT_NAME} src/main.cpp)
 
-target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC "LIB${CMAKE_PROJECT_NAME}" easyloggingpp -lpthread)
+target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC "LIB${CMAKE_PROJECT_NAME}" -lpthread)
